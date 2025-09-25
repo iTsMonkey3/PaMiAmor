@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Rompecabezas para ti 💕</title>
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background: #ffe6f0;
+      font-family: 'Comic Sans MS', cursive;
+    }
+    h1 {
+      color: #d63384;
+    }
+    #puzzle {
+      display: grid;
+      grid-template-columns: repeat(3, 100px);
+      grid-template-rows: repeat(3, 100px);
+      gap: 3px;
+    }
+    .piece {
+      width: 100px;
+      height: 100px;
+      background-size: 300px 300px;
+      cursor: grab;
+    }
+    #mensaje {
+      margin-top: 20px;
+      font-size: 1.3em;
+      color: #d63384;
+      display: none;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>Arma el rompecabezas 💖</h1>
+  <div id="puzzle"></div>
+  <div id="mensaje">🎉 ¡Lo lograste! Gracias por completar nuestro recuerdo 💕</div>
+
+  <script>
+    const imagen = "https://fastly.picsum.photos/id/454/300/300.jpg?hmac=9gblO15idYU2LvBoei2401fEvdZzB-lW05kabc5e920https://photos.google.com/photo/AF1QipP6poSDsi4t2NswY285TXeihFIf63kMpsBmUkcP"; // Cambia esta URL por una foto de ustedes
+    const puzzle = document.getElementById("puzzle");
+    const mensaje = document.getElementById("mensaje");
+
+    let piezas = [];
+
+    // Crear piezas con posiciones correctas
+    for (let i = 0; i < 9; i++) {
+      let pieza = document.createElement("div");
+      pieza.classList.add("piece");
+      pieza.style.backgroundImage = `url(${imagen})`;
+      let x = (i % 3) * -100;
+      let y = Math.floor(i / 3) * -100;
+      pieza.style.backgroundPosition = `${x}px ${y}px`;
+      pieza.setAttribute("data-index", i);
+      pieza.setAttribute("draggable", true);
+      piezas.push(pieza);
+    }
+
+    // Mezclar piezas
+    piezas.sort(() => Math.random() - 0.5);
+    piezas.forEach(p => puzzle.appendChild(p));
+
+    let dragged = null;
+
+    // Drag & Drop
+    puzzle.addEventListener("dragstart", e => {
+      if (e.target.classList.contains("piece")) {
+        dragged = e.target;
+      }
+    });
+
+    puzzle.addEventListener("dragover", e => {
+      e.preventDefault();
+    });
+
+    puzzle.addEventListener("drop", e => {
+      if (e.target.classList.contains("piece") && dragged !== e.target) {
+        // Guardar nodos
+        const draggedNext = dragged.nextSibling;
+        const targetNext = e.target.nextSibling;
+
+        // Intercambiar posiciones
+        puzzle.insertBefore(dragged, targetNext);
+        puzzle.insertBefore(e.target, draggedNext);
+
+        checkWin();
+      }
+    });
+
+    // Verificar si está completo
+    function checkWin() {
+      let piezasActuales = [...puzzle.children];
+      let correcto = piezasActuales.every(
+        (pieza, i) => pieza.getAttribute("data-index") == i
+      );
+      if (correcto) {
+        mensaje.style.display = "block";
+      }
+    }
+  </script>
+</body>
+</html>
