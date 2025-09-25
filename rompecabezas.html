@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Rompecabezas para ti 💕</title>
+  <title>Mi amada 💕</title>
   <style>
     body {
       display: flex;
@@ -13,6 +13,7 @@
       margin: 0;
       background: #ffe6f0;
       font-family: 'Comic Sans MS', cursive;
+      overflow: hidden;
     }
     h1 {
       color: #d63384;
@@ -37,17 +38,29 @@
     }
     #mensaje {
       margin-top: 20px;
-      font-size: 1.3em;
+      font-size: 1.4em;
       color: #d63384;
       display: none;
       text-align: center;
+      animation: aparecerTexto 1s ease forwards, latido 1.5s infinite;
     }
+    
+    @keyframes aparecerTexto {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes latido {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+
+
   </style>
 </head>
 <body>
   <h1>Arma el rompecabezas 💖</h1>
   <div id="puzzle"></div>
-  <div id="mensaje">🎉 ¡Lo lograste! Gracias por completar nuestro recuerdo 💕</div>
+  <div id="mensaje">🎉 ¡Lo lograste! Has completado el rompecabezas al igual que mi corazon <br> gracias por estos 4 meses mi muchacha antigua 😚❣️, te amo  💕</div>
 
   <script>
     const imagen = "img/laIndicada.jpg";
@@ -58,7 +71,6 @@
     const filas = 4;
     const columnas = 4;
 
-    // Crear piezas con posiciones correctas
     for (let i = 0; i < filas * columnas; i++) {
       let pieza = document.createElement("div");
       pieza.classList.add("piece");
@@ -73,13 +85,11 @@
       piezas.push(pieza);
     }
 
-    // Mezclar piezas
     piezas.sort(() => Math.random() - 0.5);
     piezas.forEach(p => puzzle.appendChild(p));
 
     let dragged = null;
 
-    // Drag & Drop
     puzzle.addEventListener("dragstart", e => {
       if (e.target.classList.contains("piece")) {
         dragged = e.target;
@@ -99,11 +109,9 @@
 
     puzzle.addEventListener("drop", e => {
       if (e.target.classList.contains("piece") && dragged !== e.target) {
-        // Guardar nodos
         const draggedNext = dragged.nextSibling;
         const targetNext = e.target.nextSibling;
 
-        // Intercambiar posiciones
         puzzle.insertBefore(dragged, targetNext);
         puzzle.insertBefore(e.target, draggedNext);
 
@@ -111,7 +119,6 @@
       }
     });
 
-    // Verificar si está completo
     function checkWin() {
       let piezasActuales = [...puzzle.children];
       let correcto = piezasActuales.every(
